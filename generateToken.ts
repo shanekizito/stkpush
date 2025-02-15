@@ -1,14 +1,18 @@
+import express from "express";
 import axios from "axios";
 import dotenv from "dotenv";
 
 dotenv.config(); // Load environment variables
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
 const generateToken = async () => {
-  const CONSUMER_KEY = 'iLlFa1IG8pZlGyGi2IO7V9fobPT1XQfkKqxqGfpC5Zmj57Sm';
-  const CONSUMER_SECRET = 'sfGiLwedlRM4YOtQFgwMHwWeIOWbQEk3yjbCJvGhvBHkGSTYJk6dEDGKYMjFpnTr';
+  const CONSUMER_KEY = process.env.MPESA_CONSUMER_KEY as string;
+  const CONSUMER_SECRET = process.env.MPESA_CONSUMER_SECRET as string;
 
   if (!CONSUMER_KEY || !CONSUMER_SECRET) {
-    return "Missing MPESA credentials";
+    throw new Error("Missing MPESA credentials");
   }
 
   const URL =
@@ -26,8 +30,19 @@ const generateToken = async () => {
     });
     return response.data.access_token;
   } catch (error: any) {
-    return error.response?.data || error.message;
+    throw new Error(error.response?.data || error.message);
   }
 };
 
-generateToken().then(token => console.log("Access Token:", token)).catch(error => console.error("Error:", error));
+app.get("/generate-token", async (_req, res) => {
+  try {
+    const token = await generateToken();
+    res.json({ access_token: token });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
