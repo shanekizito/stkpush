@@ -4,8 +4,8 @@ import dotenv from "dotenv";
 dotenv.config(); // Load environment variables
 
 const generateToken = async () => {
-  const CONSUMER_KEY = process.env.MPESA_CONSUMER_KEY as string;
-  const CONSUMER_SECRET = process.env.MPESA_CONSUMER_SECRET as string;
+  const CONSUMER_KEY = 'iLlFa1IG8pZlGyGi2IO7V9fobPT1XQfkKqxqGfpC5Zmj57Sm';
+  const CONSUMER_SECRET = 'sfGiLwedlRM4YOtQFgwMHwWeIOWbQEk3yjbCJvGhvBHkGSTYJk6dEDGKYMjFpnTr';
 
   if (!CONSUMER_KEY || !CONSUMER_SECRET) {
     return "Missing MPESA credentials";
